@@ -51,6 +51,8 @@ export class GameUI extends Phaser.Scene {
 
         // Écoute l'événement 'updatePlayerScore' émis par la scène de jeu
         this.scene.get('Game').events.on('updatePlayerScore', this.updatePlayerScore, this);
+
+        this.events.on('resize', this.resize, this);
     }
 
     updatePlayerScore(score: number) {
@@ -61,5 +63,12 @@ export class GameUI extends Phaser.Scene {
         this.playerScoreText.setX(this.scoreLabelText.width + 10);
 
         console.log('Score updated:', this.playerScore);
+    }
+
+    resize() {
+        this.scoreContainer.setPosition(
+            window.innerWidth / 2 - (this.scoreLabelText.width + this.playerScoreText.width) / 2,
+            window.innerHeight * 0.03
+        );
     }
 }
