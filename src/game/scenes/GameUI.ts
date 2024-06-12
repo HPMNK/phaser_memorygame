@@ -12,15 +12,29 @@ export class GameUI extends Phaser.Scene {
 
     create() {
         // Définir un thème de style de texte commun
-        const textStyle = {
-            fontSize: '32px',
+        const textStyle: Phaser.Types.GameObjects.Text.TextStyle = {
+            fontFamily: 'Roboto Condensed',
+            fontSize: '48px',
             color: '#fff',
-            fontFamily: 'Arial', // Vous pouvez spécifier la famille de police si nécessaire
-            align: 'left'
+            fontStyle: 'italic',
+            stroke: '#000',
+            strokeThickness: 8,
+            shadow: {
+                offsetX: 2,
+                offsetY: 8,
+                color: '#000',
+                blur: 0,
+                stroke: true,
+                fill: true
+            },
+            padding: {
+                left: 10,
+                right: 10
+            }
         };
 
         // Crée un texte pour afficher le label "Score:" en utilisant le thème de style
-        this.scoreLabelText = this.add.text(0, 0, 'Score:', textStyle);
+        this.scoreLabelText = this.add.text(0, 0, 'SCORE:', textStyle);
 
         // Crée un texte pour afficher le score du joueur en utilisant le thème de style
         this.playerScoreText = this.add.text(this.scoreLabelText.width + 10, 0, '0', textStyle);
