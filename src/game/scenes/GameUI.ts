@@ -40,7 +40,14 @@ export class GameUI extends Phaser.Scene {
         this.playerScoreText = this.add.text(this.scoreLabelText.width + 10, 0, '0', textStyle);
 
         // Crée un conteneur pour contenir les deux textes
-        this.scoreContainer = this.add.container(10, 10, [this.scoreLabelText, this.playerScoreText]);
+        this.scoreContainer = this.add.container(
+            window.innerWidth / 2 - (this.scoreLabelText.width + this.playerScoreText.width) / 2
+            , window.innerHeight * 0.03, [this.scoreLabelText, this.playerScoreText]);
+
+
+
+
+
 
         // Écoute l'événement 'updatePlayerScore' émis par la scène de jeu
         this.scene.get('Game').events.on('updatePlayerScore', this.updatePlayerScore, this);
