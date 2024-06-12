@@ -1,10 +1,24 @@
 import Head from "next/head";
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import styles from "@/styles/Home.module.css";
 
 const AppWithoutSSR = dynamic(() => import("@/App"), { ssr: false });
 
 export default function Home() {
+    const [fontsLoaded, setFontsLoaded] = useState(false);
+
+    useEffect(() => {
+        if (typeof document !== 'undefined' && document.fonts) {
+            document.fonts.ready.then(() => {
+                setFontsLoaded(true);
+            });
+        } else {
+            // Fallback if document.fonts is not supported
+            setFontsLoaded(true);
+        }
+    }, []);
+
     return (
         <>
             <Head>
@@ -15,7 +29,7 @@ export default function Home() {
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@900&display=swap" />
             </Head>
             <main className={styles.main}>
-                <AppWithoutSSR />
+                {fontsLoaded ? <AppWithoutSSR /> : <div>Loading fonts...</div>}
             </main>
         </>
     );
