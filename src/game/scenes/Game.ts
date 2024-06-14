@@ -83,17 +83,22 @@ export class Game extends Phaser.Scene {
     }
 
     resizeCards() {
-
         const { numCols, numRows, spacing, cardWidth, cardHeight, cardScaleX, cardScaleY, offsetX, offsetY } = this.calculateCardPosition();
-
-
 
         for (let i = 0; i < this.cards.length; i++) {
             const card = this.cards[i];
             const col = i % numCols;
             const row = Math.floor(i / numCols);
-            const x = offsetX + col * (cardWidth + spacing) + cardWidth / 2;
+
+            let x = offsetX + col * (cardWidth + spacing) + cardWidth / 2;
             const y = offsetY + row * (cardHeight + spacing) + cardHeight / 2;
+
+            // Centrer la dernière ligne si le nombre de colonnes est inférieur ou égal à 3
+            if (numCols <= 3 && row === numRows - 1) {
+                const lastRowCols = this.cards.length % numCols || numCols;
+                const lastRowOffsetX = (this.scale.width - (cardWidth * lastRowCols + spacing * (lastRowCols - 1))) / 2;
+                x = lastRowOffsetX + col * (cardWidth + spacing) + cardWidth / 2;
+            }
 
             card.setPosition(x, y);
             card.setScale(cardWidth / 48, cardHeight / 64);
