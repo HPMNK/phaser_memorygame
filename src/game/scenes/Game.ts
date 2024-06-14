@@ -34,8 +34,15 @@ export class Game extends Phaser.Scene {
         const scaleRatio = Math.min(screenWidth / 800, 1)
 
 
-        const numCols = 4;
-        const numRows = 2;
+        let numCols, numRows;
+        if (screenWidth <= 600) {
+            numCols = 3;
+            numRows = 3;
+        } else {
+            numCols = 4;
+            numRows = 2;
+        }
+
         const spacing = 20 * scaleRatio; // Espacement entre les cartes
 
         const cardWidth = Math.min(192, (screenWidth - (20 * (numCols - 1))) / numCols);
@@ -78,6 +85,8 @@ export class Game extends Phaser.Scene {
     resizeCards() {
 
         const { numCols, numRows, spacing, cardWidth, cardHeight, cardScaleX, cardScaleY, offsetX, offsetY } = this.calculateCardPosition();
+
+
 
         for (let i = 0; i < this.cards.length; i++) {
             const card = this.cards[i];
