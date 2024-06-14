@@ -23,23 +23,37 @@ export class Game extends Phaser.Scene {
 
     create() {
         this.scene.launch('GameUI'); // Lancement de la scène GameUI
+        this.createCards(); // Création des cartes
+        this.scale.on('resize', this.resizeCards, this);
 
-        // Écouter l'événement "start" de la scène GameUI pour s'assurer qu'elle est prête
+    }
+
+    calculateCardPosition() {
+        const screenWidth = this.scale.width;
+        const screenHeight = this.scale.height;
+        const scaleRatio = Math.min(screenWidth / 800, 1)
+
+
+        const numCols = 4;
+        const numRows = 2;
+        const spacing = 20 * scaleRatio; // Espacement entre les cartes
+
+        const cardWidth = Math.min(192, (screenWidth - (20 * (numCols - 1))) / numCols);
+        const cardHeight = cardWidth * (192 / 144); // Respecter le ratio original
+        const cardScaleX = cardWidth / 48 * scaleRatio;
+        const cardScaleY = cardHeight / 64 * scaleRatio;
+
+
+        const offsetX = (screenWidth - (cardWidth * numCols + spacing * (numCols - 1))) / 2;
+        const offsetY = (screenHeight - (cardHeight * numRows + spacing * (numRows - 1))) / 2 + (screenHeight * 0.05);
+
+        return { numCols, numRows, spacing, cardWidth, cardHeight, cardScaleX, cardScaleY, offsetX, offsetY };
+
+    }
+
+    createCards() {
         this.scene.get('GameUI').events.on('start', () => {
-            const screenWidth = this.scale.width;
-            const screenHeight = this.scale.height;
-
-            const numCols = 4;
-            const numRows = 2;
-            const spacing = 20; // Espacement entre les cartes
-
-            const cardWidth = 144;
-            const cardHeight = 192;
-            const cardScaleX = cardWidth / 48;
-            const cardScaleY = cardHeight / 64;
-
-            const offsetX = (screenWidth - (cardWidth * numCols + spacing * (numCols - 1))) / 2;
-            const offsetY = (screenHeight - (cardHeight * numRows + spacing * (numRows - 1))) / 2;
+            const { numCols, numRows, spacing, cardWidth, cardHeight, cardScaleX, cardScaleY, offsetX, offsetY } = this.calculateCardPosition();
 
             const positions = Phaser.Utils.Array.Shuffle([
                 ...this.cardTextures, ...this.cardTextures
@@ -59,6 +73,22 @@ export class Game extends Phaser.Scene {
                 card.on('pointerdown', () => this.onCardClicked(card));
             }
         });
+    }
+
+    resizeCards() {
+
+        const { numCols, numRows, spacing, cardWidth, cardHeight, cardScaleX, cardScaleY, offsetX, offsetY } = this.calculateCardPosition();
+
+        for (let i = 0; i < this.cards.length; i++) {
+            const card = this.cards[i];
+            const col = i % numCols;
+            const row = Math.floor(i / numCols);
+            const x = offsetX + col * (cardWidth + spacing) + cardWidth / 2;
+            const y = offsetY + row * (cardHeight + spacing) + cardHeight / 2;
+
+            card.setPosition(x, y);
+            card.setScale(cardWidth / 48, cardHeight / 64);
+        }
     }
 
     onCardClicked(card: Phaser.GameObjects.Sprite) {

@@ -17,6 +17,7 @@ export class GameUI extends Phaser.Scene {
             fontSize: '48px',
             color: '#fff',
             fontStyle: 'italic',
+            display: "swap",
             stroke: '#000',
             strokeThickness: 8,
             shadow: {
